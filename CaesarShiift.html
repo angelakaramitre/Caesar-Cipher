@@ -1,0 +1,147 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleais.com/css2?family=fruktur&family=Rampart+One&display=swap');
+        
+        body{
+            background: #004eb4;
+            position: relative;
+            bottom: 50px;
+        }
+        label{
+            font-family: sans-serif;
+            color: black;
+            transform: scale(1.5);
+            position: relative;
+        }
+        #container-2{
+            position: relative;
+            left: 50px;
+            top: 140px;
+            background: white;
+            border-radius: 10px;
+            padding: 10px 60px;
+            width: 400px;
+            height: 500px;
+            flex-direction:column;
+            box-shadow: 0 0 30 px rgba(0,0,0,0.2);
+        }
+        #container-2 button{
+            position: relative;
+            top: 100px;
+            right: 125px;
+        }
+        textarea{
+            background: transparent;
+            outline: none;
+            border-radius: 5px;
+            text-align: center;
+            transform: scale(1.5);
+            margin-bottom: 70px;
+            position: relative;
+            top: 40px;
+            cursor: pointer;
+        }
+        #encrypt-btn{
+            transform: translate(50px, 128px) scale(2,4);
+        }
+        #copyToClipBoard{
+            transform:translate(210px,105px) scale(2,4);
+        }
+        #encrypt-btn, #copyToClipBoard{
+            border-radius: 2px;
+            border: none;
+            cursor: pointer;
+            background: #3066f6;
+            color:white;
+            font-family: sans-serif;
+            padding: 4px 12px;
+        }
+        #shiftInput{
+            transform: scale(2);
+            outline: none;
+            cursor: pointer;
+            border: 1px solid grey;
+        }
+        #container-1{
+            background:white;
+            border-radius: 10px;
+            padding: 30px 60px;
+            width: 400px;
+            height: 50px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            transform: translate(50px,100px);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, cursive;
+            cursor: pointer;
+        }
+        #container-1,#container-2{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #caesar{
+            width: 111px;
+            border-radius: 0px 10px 10px 0px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div id="container-1">
+        <h1>Caesar Cipher Encrypter</h1>
+        <img id="caesar" src="caesar.jpg">
+    </div>
+
+    <div id="container-2">
+        <label><textarea type="text" id="plainInput-1" placeholder="Type in plain text"></textarea></label>
+        <button id="encrypt-btn">Encrypt</button>
+        <button id="copyToClipBoard">Copy Text</button>
+        <input type="number" id="shiftInput" min="0" max="25">
+        <br>
+        <label>
+            <textarea type="text" id="encryptedInput-1" placeholder="Encrypted text will appear here:"></textarea>
+        </label>
+    </div>
+
+    <script>
+        let encryptBtn = document.getElementById("encrypt-btn");
+        let eInput = document.getElementById("encryptedInput-1"); //button to encrypt the message
+        let pInput = document.getElementById("plainInput-1"); //plain text input
+        let inputs = [eInput,pInput];
+        let copyBtn = document.getElementById("copyToClipBoard");
+
+        inputs.forEach( input => {
+            input.oninput = () => {
+                input.value = input.value.toUpperCase(); //this will turn allthe characters that we type in uppercase 
+            }
+        })
+
+        function encrypt(){
+            let pInput = document.getElementById("plainInput-1").value;
+            let solved = " ";
+            let shiftInput = parseInt(document.getElementById("shiftInput").value); // parseInt() will  convert the value to an integer aka a number that we can work with
+
+            for(var i = 0; i < pInput.length; i++){
+                let ascii_num = pInput[i].charCodeAt(); // will return the individual code for each character
+                let sum = ascii_num + shiftInput; // this is pretty much the line behind the entire logic of this project, it will ahift the letters forward according to the value that is passed into the shifted input
+                sum >= 65 && sum <=90 ? solved += String.fromCharCode(sum) : sum > 90 ? solved += String.fromCharCode(65 + (sum & 91)) : solved += pInput[i];
+            }
+            eInput.value = solved;
+        }
+
+        function copyText(){
+            eInput.select();
+            eInput.setSelectionRange(0,99999);
+            document.execCommand('copy');
+            alert('Copied to clipboard: ${eInput.value}');
+        }
+        copyBtn.addEventListener('click', copyText);
+        encryptBtn.addEventListener('click', encrypt);
+
+    </script>
+</body>
+</html>
